@@ -1,16 +1,24 @@
-# React + Vite
+# Nhà Hàng Cam: frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React 19 + Vite, Ant Design 6, React Router 8, TanStack Query, Zustand, Recharts, icon Lucide. Thiết kế đầy đủ ở `docs/superpowers/specs/2026-11-08-restaurant-system-design.md`.
 
-Currently, two official plugins are available:
+## Chạy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm test           # test tính tiền (vitest)
+npm run lint
+```
 
-## React Compiler
+| Đường dẫn | Dành cho |
+|---|---|
+| `/` | Khách: trang chủ, thực đơn, đặt bàn, tài khoản (`/login` có tài khoản demo) |
+| `/staff/login` | Nhân viên: chọn tài khoản demo theo vai trò, menu đổi theo quyền |
+| `/t/<mã QR>` | Khách gọi món tại bàn. Lấy link ở Sơ đồ bàn → bấm một bàn → "Mở trang gọi món của bàn" |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Dữ liệu
 
-## Expanding the Oxlint configuration
+Chưa có backend. `src/shared/api/api.js` là API giả, đọc ghi localStorage (dữ liệu mẫu 60 ngày ở `src/shared/mock/seed.js`). Hai tab cùng trình duyệt thấy thay đổi của nhau, ví dụ khách bấm "Cần hỗ trợ" thì trang Phục vụ hiện ngay. Đặt lại dữ liệu: menu tài khoản góc phải → "Đặt lại dữ liệu demo".
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Khi nối backend: thay thân các hàm trong `api.js` bằng lời gọi Axios tới `/api/v1` (mục 8 của thiết kế). Các trang dùng `useCol` và `useRun` trong `src/shared/api/hooks.js` nên không phải sửa.

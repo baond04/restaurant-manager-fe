@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bếp Cam – Khách hàng</title>
+<meta name="description" content="Mockup giao diện khách hàng: trang web, thực đơn, đặt bàn, tài khoản, gọi món tại bàn qua QR và trợ lý AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Mockup tĩnh: dữ liệu giả trong JS, không gọi API. */
+:root{
+  --bg:#ffffff; --surface:#fffaf5; --surface-2:#fff3e8; --line:#f1e4d8; --line-strong:#e6d3c2;
+  --ink:#1c1917; --ink-2:#57534e; --muted:#78716c;
+  --accent:#ea580c; --accent-strong:#c2410c; --accent-hover:#9a3412; --accent-soft:#ffedd5;
+  --ok:#15803d; --ok-soft:#dcfce7; --warn:#a16207; --warn-soft:#fef9c3; --bad:#b91c1c; --bad-soft:#fee2e2;
+  --r-sm:8px; --r:14px; --r-lg:20px;
+  --shadow:0 1px 2px rgba(28,25,23,.06),0 4px 16px rgba(28,25,23,.06);
+  --shadow-lg:0 8px 32px rgba(28,25,23,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Be Vietnam Pro",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:var(--accent-strong)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{width:min(1200px,100% - 32px);margin-inline:auto}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800}
+h2{font-size:clamp(1.4rem,2.6vw,2rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:600}
+.muted{color:var(--muted)}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px}
+.btn .i,.chip .i,.tag .i,.badge .i{width:16px;height:16px;vertical-align:-3px}
+.hero .facts .i{width:18px;height:18px;vertical-align:-4px}
+.icon-btn{color:var(--ink-2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Buttons: một cặp kiểu duy nhất */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 20px;border-radius:999px;border:1px solid transparent;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .15s,background .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(1px) scale(.98)}
+.btn-primary{background:var(--accent-strong);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-ghost{background:#fff;border-color:var(--line-strong);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent-strong)}
+.btn-sm{min-height:36px;padding:0 14px;font-size:.9rem}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-strong);background:#fff;display:grid;place-items:center;cursor:pointer;transition:transform .15s}
+.icon-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+.icon-btn:active{transform:scale(.95)}
+
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line-strong);background:#fff;cursor:pointer;font-size:.92rem;transition:all .15s}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-hover);font-weight:600}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);font-size:.78rem;font-weight:500}
+.tag-ai{background:var(--accent-soft);color:var(--accent-hover)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:600}
+.b-ok{background:var(--ok-soft);color:var(--ok)} .b-warn{background:var(--warn-soft);color:var(--warn)} .b-bad{background:var(--bad-soft);color:var(--bad)} .b-info{background:var(--accent-soft);color:var(--accent-hover)}
+
+/* Header */
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;color:var(--ink);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:1rem}
+.nav{display:flex;gap:4px;margin-left:12px}
+.nav a{padding:8px 14px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-weight:500;background-image:linear-gradient(var(--accent),var(--accent));background-size:0 2px;background-repeat:no-repeat;background-position:50% 100%;transition:background-size .2s,color .15s}
+.nav a:hover{color:var(--ink);background-size:60% 2px}
+.nav a[aria-current="page"]{color:var(--accent-hover);background-color:var(--accent-soft);background-size:0 2px}
+.top-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent-hover);display:grid;place-items:center;font-weight:700}
+.menu-toggle{display:none}
+
+/* Hero */
+.hero{position:relative;min-height:calc(100svh - 68px);display:grid;align-items:end;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,25,23,0) 30%,rgba(28,25,23,.72) 100%)}
+.hero .wrap{position:relative;z-index:1;padding-block:64px;color:#fff}
+.hero h1{max-width:16ch;color:#fff}
+.hero p{max-width:52ch;font-size:1.1rem;color:#fef3e8}
+.hero .facts{display:flex;flex-wrap:wrap;gap:24px;margin:18px 0 28px;font-weight:600}
+.hero .facts span{display:flex;align-items:center;gap:8px}
+.hero .actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero .btn-ghost{background:rgba(255,255,255,.95)}
+
+section.block{padding:72px 0}
+section.alt{background:var(--surface)}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.sec-head p{margin:0;max-width:60ch}
+
+/* Item card */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+.card.link{cursor:pointer}
+.card.link:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.card .ph{aspect-ratio:4/3;overflow:hidden;background:var(--surface-2)}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.card.link:hover .ph img{transform:scale(1.03)}
+.card .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{font-weight:700;color:var(--accent-hover)}
+.why{font-size:.84rem;color:var(--ink-2);background:var(--surface-2);border-radius:var(--r-sm);padding:6px 10px}
+.warn-line{font-size:.82rem;color:var(--bad);font-weight:500}
+.card.dim{opacity:.55}
+
+/* Visit band */
+.visit{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+.visit .ph{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/3}
+.visit .ph img{width:100%;height:100%;object-fit:cover}
+.visit dl{display:grid;grid-template-columns:auto 1fr;gap:10px 24px;margin:20px 0}
+.visit dt{color:var(--muted)} .visit dd{margin:0;font-weight:600}
+.big-type{font-size:clamp(2.2rem,5vw,4rem);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0}
+
+/* Menu page */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:24px}
+.search{flex:1 1 260px;min-height:44px;border:1px solid var(--line-strong);border-radius:999px;padding:0 18px;background:#fff}
+.search:focus{outline:3px solid var(--accent-soft);border-color:var(--accent)}
+.switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-size:.92rem}
+.switch input{appearance:none;width:42px;height:24px;border-radius:999px;background:var(--line-strong);position:relative;cursor:pointer;transition:background .2s;margin:0}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch input:checked{background:var(--accent-strong)} .switch input:checked::after{transform:translateX(18px)}
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+
+/* Booking */
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:24px}
+.panel.soft{background:var(--surface)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.field label,.field .lbl{font-weight:600;font-size:.92rem}
+.input{min-height:44px;border:1px solid var(--line-strong);border-radius:var(--r-sm);padding:0 14px;background:#fff;width:100%}
+textarea.input{padding:10px 14px;min-height:80px}
+.input:focus{outline:3px solid var(--accent-soft);border-color:var(--accent)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.slot{min-height:40px;border:1px solid var(--line-strong);border-radius:var(--r-sm);background:#fff;cursor:pointer;font-weight:500;transition:all .15s}
+.slot:hover:not(:disabled){border-color:var(--accent)}
+.slot[aria-pressed="true"]{background:var(--accent-strong);border-color:var(--accent-strong);color:#fff}
+.slot:disabled{background:var(--surface-2);color:#a8a29e;text-decoration:line-through;cursor:not-allowed}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden}
+.stepper button{width:44px;height:44px;border:0;background:#fff;cursor:pointer;font-size:1.2rem}
+.stepper button:hover{background:var(--surface-2)}
+.stepper output{min-width:48px;text-align:center;font-weight:700}
+.areas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.area{border:1px solid var(--line-strong);border-radius:var(--r);padding:12px;cursor:pointer;background:#fff;text-align:left;transition:all .15s}
+.area:hover{border-color:var(--accent)}
+.area[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.area b{display:block}
+.sum-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line-strong)}
+.sum-row:last-child{border:0}
+
+/* Account */
+.acct{display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:start}
+.side{display:flex;flex-direction:column;gap:4px;position:sticky;top:88px}
+.side button{text-align:left;padding:10px 14px;border-radius:var(--r-sm);border:0;background:none;cursor:pointer;font-weight:500;color:var(--ink-2)}
+.side button:hover{background:var(--surface-2);color:var(--ink)}
+.side button[aria-selected="true"]{background:var(--accent-soft);color:var(--accent-hover);font-weight:600}
+.pref-grid{display:flex;flex-wrap:wrap;gap:8px}
+.pref{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line-strong);background:#fff;cursor:pointer;font-size:.9rem;transition:all .15s}
+.pref:hover{border-color:var(--accent)}
+.pref[data-state="LIKE"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:600}
+.pref[data-state="DISLIKE"]{background:var(--warn-soft);border-color:var(--warn);color:var(--warn);font-weight:600}
+.pref[data-state="ALLERGY"]{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);font-weight:600}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--ink-2);margin:8px 0 16px}
+table.list{width:100%;border-collapse:collapse}
+table.list th,table.list td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line)}
+table.list th{font-size:.82rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.points{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.points .num{font-size:3rem;font-weight:800;color:var(--accent-hover);line-height:1}
+.bar{height:10px;background:var(--surface-2);border-radius:999px;overflow:hidden;flex:1;min-width:200px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.session{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+
+/* Modal */
+dialog{border:0;border-radius:var(--r-lg);padding:0;max-width:640px;width:calc(100% - 32px);box-shadow:var(--shadow-lg)}
+dialog::backdrop{background:rgba(28,25,23,.45)}
+.modal-ph{aspect-ratio:16/9;overflow:hidden}
+.modal-ph img{width:100%;height:100%;object-fit:cover}
+.modal-body{padding:22px 24px 24px}
+.review{padding:12px 0;border-top:1px solid var(--line)}
+.stars{color:var(--accent);letter-spacing:2px}
+
+/* Table (QR) mode */
+.table-mode{background:var(--surface);min-height:100svh;padding:24px 16px 120px}
+.phone{max-width:430px;margin:0 auto;background:#fff;border-radius:28px;box-shadow:var(--shadow-lg);overflow:hidden;position:relative;height:min(860px,calc(100svh - 84px));display:flex;flex-direction:column}
+.t-head{padding:16px 18px 12px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}
+.t-head .row{display:flex;justify-content:space-between;align-items:center}
+.t-cats{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}
+.t-cats .chip{flex:none}
+.t-body{padding:8px 18px 140px;flex:1;overflow-y:auto;min-height:0}
+.t-item{display:grid;grid-template-columns:84px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.t-item img{width:84px;height:84px;border-radius:12px;object-fit:cover}
+.t-item h3{font-size:1rem;margin:0 0 2px}
+.add{width:36px;height:36px;border-radius:50%;border:0;background:var(--accent-strong);color:#fff;font-size:1.3rem;cursor:pointer;transition:transform .15s}
+.add:hover{transform:translateY(-1px);background:var(--accent-hover)} .add:active{transform:scale(.92)}
+.t-bar{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px 18px;display:flex;gap:8px;z-index:3}
+.t-bar .btn{flex:1;padding:0 10px;font-size:.92rem}
+.cart-pill{position:absolute;left:18px;right:18px;bottom:84px;z-index:3}
+.cart-pill .btn{width:100%;justify-content:space-between;min-height:52px;box-shadow:var(--shadow-lg)}
+.sheet{position:absolute;inset:0;background:rgba(28,25,23,.4);display:none;z-index:5;align-items:end}
+.sheet.open{display:flex}
+.sheet-in{background:#fff;width:100%;border-radius:22px 22px 0 0;padding:20px 18px 22px;max-height:80%;overflow:auto}
+.c-line{display:grid;grid-template-columns:1fr auto;gap:6px 10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qty{display:inline-flex;align-items:center;gap:8px}
+.qty button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line-strong);background:#fff;cursor:pointer}
+.c-note{grid-column:1/-1;min-height:36px;border:1px solid var(--line);border-radius:var(--r-sm);padding:0 10px;font-size:.88rem}
+.status-line{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);gap:8px}
+.steps{display:flex;gap:4px;margin-top:6px}
+.steps i{height:4px;flex:1;border-radius:4px;background:var(--line)}
+.steps i.on{background:var(--accent)}
+.closed-note{margin:12px 18px 0;padding:12px 14px;border-radius:var(--r);background:var(--warn-soft);color:var(--warn);font-size:.9rem}
+
+/* Chat */
+.chat-fab{position:fixed;right:24px;bottom:24px;z-index:40;width:60px;height:60px;border-radius:50%;border:0;background:var(--accent-strong);color:#fff;box-shadow:var(--shadow-lg);cursor:pointer;display:grid;place-items:center;transition:transform .15s}
+.chat-fab:hover{transform:translateY(-2px);background:var(--accent-hover)} .chat-fab:active{transform:scale(.95)}
+.chat{position:fixed;right:24px;bottom:96px;z-index:41;width:min(400px,calc(100% - 32px));height:min(620px,calc(100svh - 120px));background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden;border:1px solid var(--line)}
+.chat.open{display:flex}
+body.in-table .chat-fab{display:none}
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.help-grid button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px;border:1px solid var(--line-strong);border-radius:var(--r);background:#fff;cursor:pointer;font-weight:600;text-align:left;transition:all .15s}
+.help-grid button:hover{border-color:var(--accent);transform:translateY(-1px)}
+.help-grid button:active{transform:scale(.98)}
+.vip-note{margin-top:10px;padding:12px 14px;border-radius:var(--r);background:var(--accent-soft);color:var(--accent-hover);font-size:.9rem}
+body.in-table .chat{bottom:16px;height:min(620px,calc(100svh - 32px))}
+.chat-head{padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.chat-head .dot{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.chat-log{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fff}
+.msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:.94rem}
+.msg.user{align-self:flex-end;background:var(--accent-strong);color:#fff;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--surface-2);border-bottom-left-radius:4px}
+.recs{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.rec{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;transition:transform .15s,box-shadow .15s}
+.rec:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.rec img{width:56px;height:56px;border-radius:8px;object-fit:cover}
+.rec b{display:block;font-size:.9rem} .rec small{color:var(--muted)}
+.fb{display:flex;gap:6px;margin-top:8px}
+.fb button{border:1px solid var(--line-strong);background:#fff;border-radius:999px;padding:2px 10px;cursor:pointer;font-size:.85rem}
+.fb button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.quick{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 0}
+.quick button{border:1px solid var(--line-strong);background:#fff;border-radius:999px;padding:6px 12px;font-size:.82rem;cursor:pointer}
+.quick button:hover{border-color:var(--accent)}
+.chat-in{display:flex;gap:8px;padding:12px 16px 16px}
+.chat-in input{flex:1;min-height:44px;border:1px solid var(--line-strong);border-radius:999px;padding:0 16px}
+.typing{display:inline-flex;gap:4px} .typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:b 1s infinite} .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,60%,100%{opacity:.3}30%{opacity:1}}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;opacity:0;transition:all .25s;z-index:60;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%)}
+footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:.85rem}
+footer .credits{font-size:.72rem;margin-top:10px;line-height:1.5}
+.demo-bar{background:var(--ink);color:#fff;font-size:.82rem}
+.demo-bar .wrap{display:flex;gap:12px;align-items:center;min-height:36px;flex-wrap:wrap}
+.demo-bar a{color:#fdba74}
+
+[hidden]{display:none!important}
+
+@media (max-width:900px){
+  .two-col,.visit,.acct{grid-template-columns:1fr}
+  .side{position:static;flex-direction:row;overflow-x:auto}
+  .side button{white-space:nowrap}
+  .areas{grid-template-columns:1fr 1fr 1fr}
+}
+@media (max-width:720px){
+  .nav{display:none;position:absolute;top:68px;left:0;right:0;background:#fff;flex-direction:column;padding:12px 16px;border-bottom:1px solid var(--line);margin:0}
+  .nav.open{display:flex}
+  .menu-toggle{display:grid}
+  .top-right .btn{display:none}
+  section.block{padding:48px 0}
+  .hero .actions .btn{flex:1}
+  .areas{grid-template-columns:1fr}
+  .table-mode{padding:0}
+  .phone{border-radius:0;box-shadow:none;height:calc(100svh - 90px)}
+  .chat{right:16px;bottom:88px}
+  .chat-fab{right:16px;bottom:16px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<!--SPRITE--><svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-layout-dashboard" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol><symbol id="i-armchair" viewBox="0 0 24 24"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3" /> <path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z" /> <path d="M5 18v2" /> <path d="M19 18v2" /></symbol><symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="M12 11h4" /> <path d="M12 16h4" /> <path d="M8 11h.01" /> <path d="M8 16h.01" /></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="M8 13h.01" /> <path d="M12 13h.01" /> <path d="M16 13h.01" /> <path d="M8 17h.01" /> <path d="M12 17h.01" /> <path d="M16 17h.01" /></symbol><symbol id="i-credit-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2" /> <line x1="2" x2="22" y1="10" y2="10" /> <path d="M6 14h2" /></symbol><symbol id="i-chef-hat" viewBox="0 0 24 24"><path d="M10 11v5" /> <path d="M14 11v5" /> <path d="M6 12.65c0-.457-.316-.844-.727-1.041A4 4 0 017.52 4.034a1.53 1.53 0 001.367-.547 4 4 0 016.225 0 1.53 1.53 0 001.367.547 4 4 0 012.248 7.575c-.411.197-.727.584-.727 1.04V19a2 2 0 01-2 2H8a2 2 0 01-2-2z" /> <path d="M6 16h12" /></symbol><symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol><symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /></symbol><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></symbol><symbol id="i-ticket" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" /> <path d="M13 5v2" /> <path d="M13 17v2" /> <path d="M13 11v2" /></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol><symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" /></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0" /> <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /></symbol><symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" /> <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" /> <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" /> <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" /></symbol><symbol id="i-concierge-bell" viewBox="0 0 24 24"><path d="M3 20a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1Z" /> <path d="M20 16a8 8 0 1 0-16 0" /> <path d="M12 4v4" /> <path d="M10 4h4" /></symbol><symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /> <path d="M7 2v20" /> <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></symbol><symbol id="i-building-2" viewBox="0 0 24 24"><path d="M10 12h4" /> <path d="M10 8h4" /> <path d="M14 21v-3a2 2 0 0 0-4 0v3" /> <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /> <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol><symbol id="i-crown" viewBox="0 0 24 24"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" /> <path d="M5 21h14" /></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /> <circle cx="12" cy="10" r="3" /></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" /></symbol><symbol id="i-log-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5" /> <path d="M21 12H9" /> <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /> <path d="M12 5v14" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol><symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M10 11v6" /> <path d="M14 11v6" /> <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /> <path d="M3 6h18" /> <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" /></symbol><symbol id="i-qr-code" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1" /> <rect width="5" height="5" x="16" y="3" rx="1" /> <rect width="5" height="5" x="3" y="16" rx="1" /> <path d="M21 16h-3a2 2 0 0 0-2 2v3" /> <path d="M21 21v.01" /> <path d="M12 7v3a2 2 0 0 1-2 2H7" /> <path d="M3 12h.01" /> <path d="M12 3h.01" /> <path d="M12 16v.01" /> <path d="M16 12h1" /> <path d="M21 12v.01" /> <path d="M12 21v-1" /></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /> <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" /> <rect x="6" y="14" width="12" height="8" rx="1" /></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /> <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></symbol><symbol id="i-banknote" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2" /> <circle cx="12" cy="12" r="2" /> <path d="M6 12h.01M18 12h.01" /></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><path d="M10 18v-7" /> <path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z" /> <path d="M14 18v-7" /> <path d="M18 18v-7" /> <path d="M3 22h18" /> <path d="M6 18v-7" /></symbol><symbol id="i-receipt" viewBox="0 0 24 24"><path d="M12 17V7" /> <path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" /> <path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></symbol><symbol id="i-percent" viewBox="0 0 24 24"><line x1="19" x2="5" y1="5" y2="19" /> <circle cx="6.5" cy="6.5" r="2.5" /> <circle cx="17.5" cy="17.5" r="2.5" /></symbol><symbol id="i-trending-up" viewBox="0 0 24 24"><path d="M16 7h6v6" /> <path d="m22 7-8.5 8.5-5-5L2 17" /></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M16 17h6v-6" /> <path d="m22 17-8.5-8.5-5 5L2 7" /></symbol><symbol id="i-file-down" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M12 18v-6" /> <path d="m9 15 3 3 3-3" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /> <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-key-round" viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /> <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" /></symbol><symbol id="i-circle-user" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="10" r="3" /> <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" /></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /> <path d="m21.854 2.147-10.94 10.939" /></symbol><symbol id="i-thumbs-up" viewBox="0 0 24 24"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /> <path d="M7 10v12" /></symbol><symbol id="i-thumbs-down" viewBox="0 0 24 24"><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z" /> <path d="M17 14V2" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" /></symbol><symbol id="i-calendar-clock" viewBox="0 0 24 24"><path d="M16 14v2.2l1.6 1" /> <path d="M16 2v3" /> <path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338" /> <path d="M3 9h5.859" /> <path d="M8 2v3" /> <circle cx="16" cy="16" r="6" /></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /> <path d="M21 3v5h-5" /> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /> <path d="M8 16H3v5" /></symbol><symbol id="i-cpu" viewBox="0 0 24 24"><path d="M12 20v2" /> <path d="M12 2v2" /> <path d="M17 20v2" /> <path d="M17 2v2" /> <path d="M2 12h2" /> <path d="M2 17h2" /> <path d="M2 7h2" /> <path d="M20 12h2" /> <path d="M20 17h2" /> <path d="M20 7h2" /> <path d="M7 20v2" /> <path d="M7 2v2" /> <rect x="4" y="4" width="16" height="16" rx="2" /> <rect x="8" y="8" width="8" height="8" rx="1" /></symbol><symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" /> <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /></symbol><symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2" /> <line x1="12" x2="15" y1="14" y2="11" /> <circle cx="12" cy="14" r="8" /></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M3 5h.01" /> <path d="M3 12h.01" /> <path d="M3 19h.01" /> <path d="M8 5h13" /> <path d="M8 12h13" /> <path d="M8 19h13" /></symbol><symbol id="i-door-open" viewBox="0 0 24 24"><path d="M10 21H2" /> <path d="M10 3H7a2 2 0 00-2 2v16" /> <path d="M14 12h.01" /> <path d="M19 21V5a2 2 0 00-1.675-1.974l-6.163-1.013A1 1 0 0010 3v18a1 1 0 001.124.992z" /> <path d="M22 21h-3" /></symbol><symbol id="i-sofa" viewBox="0 0 24 24"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3" /> <path d="M2 16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z" /> <path d="M4 18v2" /> <path d="M20 18v2" /> <path d="M12 4v9" /></symbol><symbol id="i-trees" viewBox="0 0 24 24"><path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z" /> <path d="M7 16v6" /> <path d="M13 19v3" /> <path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5" /></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="m16 9-5.5 5.5L8 12" /></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /> <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /> <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" /> <path d="M7 3v4a1 1 0 0 0 1 1h7" /></symbol><symbol id="i-filter" viewBox="0 0 24 24"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" /></symbol><symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol><symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4" /> <line x1="19" x2="19" y1="8" y2="14" /> <line x1="22" x2="16" y1="11" y2="11" /></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /></symbol><symbol id="i-shopping-cart" viewBox="0 0 24 24"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18" /> <path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25" /> <circle cx="18" cy="20" r="2" /> <circle cx="8" cy="20" r="2" /></symbol><symbol id="i-smartphone" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /> <path d="M12 18h.01" /></symbol><symbol id="i-house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /></symbol><symbol id="i-calendar-check" viewBox="0 0 24 24"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="m9 15 2 2 4-4" /></symbol><symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14" /> <path d="M5 2h14" /> <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /> <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /></symbol><symbol id="i-bot" viewBox="0 0 24 24"><path d="M12 8V4H8" /> <rect width="16" height="12" x="4" y="8" rx="2" /> <path d="M2 14h2" /> <path d="M20 14h2" /> <path d="M15 13v2" /> <path d="M9 13v2" /></symbol><symbol id="i-undo-2" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5" /> <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" /></symbol><symbol id="i-glass-water" viewBox="0 0 24 24"><path d="M5.116 4.104A1 1 0 0 1 6.11 3h11.78a1 1 0 0 1 .994 1.105L17.19 20.21A2 2 0 0 1 15.2 22H8.8a2 2 0 0 1-2-1.79z" /> <path d="M6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0" /></symbol><symbol id="i-lightbulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /> <path d="M9 18h6" /> <path d="M10 22h4" /></symbol><symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> <path d="M12 7v5l4 2" /></symbol><symbol id="i-store" viewBox="0 0 24 24"><path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5" /> <path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244" /> <path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05" /></symbol><symbol id="i-layers-2" viewBox="0 0 24 24"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z" /> <path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845" /></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /> <path d="M12 17h.01" /></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></symbol><symbol id="i-mail" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /> <rect x="2" y="4" width="20" height="16" rx="2" /></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /></symbol><symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M4.929 4.929 19.07 19.071" /></symbol><symbol id="i-lock-open" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 9.9-1" /></symbol><symbol id="i-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5" /> <path d="M15 8h-5" /> <path d="M19 17V5a2 2 0 0 0-2-2H4" /> <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M10 2v2" /> <path d="M14 2v2" /> <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" /> <path d="M6 2v2" /></symbol><symbol id="i-wine" viewBox="0 0 24 24"><path d="M8 22h8" /> <path d="M7 10h10" /> <path d="M12 15v7" /> <path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z" /></symbol><symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" /></symbol><symbol id="i-square-user-round" viewBox="0 0 24 24"><path d="M18 21a6 6 0 0 0-12 0" /> <circle cx="12" cy="11" r="4" /> <rect width="18" height="18" x="3" y="3" rx="2" /></symbol><symbol id="i-blocks" viewBox="0 0 24 24"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2" /> <rect x="14" y="2" width="8" height="8" rx="1" /></symbol></svg><!--/SPRITE-->
+
+<div class="demo-bar"><div class="wrap">
+  <b>MOCKUP KHÁCH HÀNG</b>
+  <span>Đổi màn hình:</span>
+  <a href="#home">Web khách</a> · <a href="#table">Gọi món tại bàn (QR)</a> · <a href="#table-closed">QR khi bàn chưa mở</a> · <a href="staff.html">Sang giao diện nhân viên →</a>
+</div></div>
+
+<!-- ===== WEB KHÁCH ===== -->
+<div id="web">
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#home"><span class="logo-mark" aria-hidden="true">BC</span>Bếp Cam</a>
+    <nav class="nav" id="nav" aria-label="Chính">
+      <a href="#home">Trang chủ</a>
+      <a href="#menu">Thực đơn</a>
+      <a href="#booking">Đặt bàn</a>
+      <a href="#account">Tài khoản</a>
+    </nav>
+    <div class="top-right">
+      <a class="btn btn-primary btn-sm" href="#booking">Đặt bàn ngay</a>
+      <a class="avatar" href="#account" aria-label="Tài khoản của Minh Anh">MA</a>
+      <button class="icon-btn menu-toggle" aria-label="Mở menu" aria-expanded="false" id="menuToggle"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HOME -->
+  <div data-view="home">
+    <section class="hero">
+      <img src="img/interior.jpg" alt="Phòng ăn với bàn tròn gỗ và cửa sổ lớn" fetchpriority="high">
+      <div class="wrap">
+        <h1>Nhà hàng món Việt ở Hà Đông, đặt bàn trong 30 giây</h1>
+        <p>Hơn 40 món nấu trong ngày. Quét mã QR trên bàn để gọi món, hoặc hỏi trợ lý AI chọn món hợp khẩu vị của bạn.</p>
+        <div class="facts"><span><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg> Mở cửa 10:00 – 22:00</span><span><svg class="i" aria-hidden="true"><use href="#i-armchair"/></svg> 120 chỗ, 3 tầng</span><span><svg class="i" aria-hidden="true"><use href="#i-star"/></svg> 4,7 từ 1.280 đánh giá</span></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="#booking">Đặt bàn ngay</a>
+          <a class="btn btn-ghost" href="#menu">Xem thực đơn</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="tag tag-ai"><svg class="i" aria-hidden="true"><use href="#i-sparkles"/></svg> Gợi ý bởi AI</span><h2 style="margin-top:10px">Món hợp khẩu vị của Minh Anh</h2>
+          </div>
+          <a class="btn btn-ghost btn-sm" href="#account" data-acct="prefs">Sửa sở thích</a>
+        </div>
+        <div class="grid" id="recGrid"></div>
+      </div>
+    </section>
+
+    <section class="block alt">
+      <div class="wrap">
+        <div class="sec-head"><h2>Món bán chạy tuần này</h2><a class="btn btn-ghost btn-sm" href="#menu">Xem cả thực đơn</a></div>
+        <div class="grid" id="bestGrid"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="wrap visit">
+        <div class="ph"><img src="img/buncha.jpg" alt="Mâm bún chả với rau sống, chả nướng và nước chấm" loading="lazy"></div>
+        <div>
+          <p class="big-type">Quận Hà Đông, Hà Nội</p>
+          <dl>
+            <dt>Giờ mở cửa</dt><dd>10:00 – 22:00, cả tuần</dd>
+            <dt>Khu vực</dt><dd>Sảnh trong nhà · Sân thượng · Phòng VIP (10–20 khách)</dd>
+            <dt>Đỗ xe</dt><dd>Ô tô và xe máy, miễn phí</dd>
+            <dt>Liên hệ</dt><dd>datban@bepcam.example</dd>
+          </dl>
+          <a class="btn btn-primary" href="#booking">Đặt bàn cho tối nay</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MENU -->
+  <section class="block" data-view="menu" hidden>
+    <div class="wrap">
+      <div class="sec-head"><div><h2>Thực đơn</h2><p class="muted">Giá đã gồm VAT. Món hết trong ngày sẽ hiện mờ.</p></div></div>
+      <div class="cats" id="cats" role="group" aria-label="Danh mục"></div>
+      <div class="toolbar">
+        <label class="sr" for="q">Tìm món</label>
+        <input id="q" class="search" type="search" placeholder="Tìm món: phở, bò, chay…">
+        <input type="checkbox" id="hideAllergy" checked hidden>
+      </div>
+      <div class="grid" id="menuGrid"></div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="block" data-view="booking" hidden>
+    <div class="wrap">
+      <div class="sec-head"><div><h2>Đặt bàn</h2><p class="muted">Nhà hàng xác nhận trong 10 phút. Giữ bàn 15 phút sau giờ hẹn.</p></div></div>
+      <div class="two-col">
+        <form class="panel" id="bookForm">
+          <div class="field"><label for="bDate">Ngày</label><input class="input" type="date" id="bDate" required></div>
+          <div class="field"><span class="lbl" id="slotLbl">Giờ đến</span><div class="slots" id="slots" role="group" aria-labelledby="slotLbl"></div></div>
+          <div class="field"><span class="lbl">Số khách</span>
+            <div class="stepper"><button type="button" id="gMinus" aria-label="Bớt khách">−</button><output id="gCount">4</output><button type="button" id="gPlus" aria-label="Thêm khách">+</button></div></div>
+          <div class="field"><span class="lbl" id="areaLbl">Khu vực mong muốn</span>
+            <div class="areas" role="group" aria-labelledby="areaLbl">
+              <button type="button" class="area" aria-pressed="true" data-area="Sảnh trong nhà"><b>Sảnh trong nhà</b><small class="muted">Tầng 1, 2 · máy lạnh</small></button>
+              <button type="button" class="area" aria-pressed="false" data-area="Sân thượng"><b>Sân thượng</b><small class="muted">Tầng 2 · thoáng, có mái che</small></button>
+              <button type="button" class="area" aria-pressed="false" data-area="Phòng VIP"><b>Phòng VIP</b><small class="muted">Tầng 3 · từ 10 khách</small></button>
+            </div></div>
+          
+          <div class="field" style="margin-top:18px"><label for="bName">Họ tên</label><input class="input" id="bName" value="Nguyễn Minh Anh" required></div>
+          <div class="field"><label for="bNote">Ghi chú</label><textarea class="input" id="bNote" placeholder="Sinh nhật, ghế trẻ em, dị ứng…"></textarea></div>
+          <button class="btn btn-primary" type="submit" style="width:100%">Gửi yêu cầu đặt bàn</button>
+        </form>
+        <div>
+          <div class="panel soft">
+            <h3>Tóm tắt</h3>
+            <div class="sum-row"><span class="muted">Ngày</span><b id="sDate">–</b></div>
+            <div class="sum-row"><span class="muted">Giờ</span><b id="sTime">–</b></div>
+            <div class="sum-row"><span class="muted">Số khách</span><b id="sGuests">4</b></div>
+            <div class="sum-row"><span class="muted">Khu vực</span><b id="sArea">Sảnh trong nhà</b></div>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <h3>Lượt đặt của tôi</h3>
+            <div id="myBookings"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCOUNT -->
+  <section class="block" data-view="account" hidden>
+    <div class="wrap acct">
+      <div class="side" role="tablist" aria-label="Tài khoản">
+        <button role="tab" data-tab="profile" aria-selected="true">Hồ sơ</button>
+        <button role="tab" data-tab="prefs" aria-selected="false">Sở thích & dị ứng</button>
+        <button role="tab" data-tab="orders" aria-selected="false">Lịch sử gọi món</button>
+        <button role="tab" data-tab="points" aria-selected="false">Điểm tích lũy</button>
+        <button role="tab" data-tab="sessions" aria-selected="false">Phiên đăng nhập</button>
+      </div>
+      <div>
+        <div class="panel" data-tabp="profile">
+          <h2>Hồ sơ</h2>
+          <div class="two-col" style="grid-template-columns:1fr 1fr;gap:16px">
+            <div class="field"><label for="pn">Họ tên</label><input class="input" id="pn" value="Nguyễn Minh Anh"></div>
+            <div class="field"><label for="pp">Số điện thoại</label><input class="input" id="pp" value="09xx xxx xxx"></div>
+            <div class="field"><label for="pe">Email</label><input class="input" id="pe" value="minhanh@mail.example" disabled></div>
+            <div class="field"><label for="pd">Ngày sinh</label><input class="input" id="pd" type="date" value="2001-05-14"></div>
+          </div>
+          <button class="btn btn-primary" data-toast="Đã lưu hồ sơ">Lưu thay đổi</button>
+        </div>
+
+        <div class="panel" data-tabp="prefs" hidden>
+          <h2>Sở thích & dị ứng</h2>
+          
+          <div class="legend"><span class="badge b-ok">Thích</span><span class="badge b-warn">Không thích</span><span class="badge b-bad">Dị ứng</span><span class="tag">Không chọn</span></div>
+          <h3>Khẩu vị và nguyên liệu</h3>
+          <div class="pref-grid" id="prefGrid"></div>
+          <button class="btn btn-primary" style="margin-top:20px" data-toast="Đã lưu. Gợi ý sẽ cập nhật ngay.">Lưu sở thích</button>
+        </div>
+
+        <div class="panel" data-tabp="orders" hidden>
+          <h2>Lịch sử gọi món</h2>
+          <table class="list"><thead><tr><th>Ngày</th><th>Bàn</th><th>Món</th><th>Tổng</th><th></th></tr></thead><tbody id="orderRows"></tbody></table>
+        </div>
+
+        <div class="panel" data-tabp="points" hidden>
+          <h2>Điểm tích lũy</h2>
+          <div class="points"><div><div class="num">1.240</div><span class="muted">điểm · hạng Bạc</span></div>
+            <div style="flex:1"><div class="row" style="display:flex;justify-content:space-between"><small>Bạc</small><small>Vàng (2.000 điểm)</small></div><div class="bar"><i style="width:62%"></i></div><small class="muted">Còn 760 điểm để lên hạng Vàng. 1.000đ chi tiêu = 1 điểm. 100 điểm = 10.000đ.</small></div></div>
+        </div>
+
+        <div class="panel" data-tabp="sessions" hidden>
+          <h2>Phiên đăng nhập</h2>
+          <p class="muted">Mỗi thiết bị giữ một phiên đăng nhập. Phiên tự hết hạn sau 7 ngày không dùng, hoặc 30 ngày nếu bạn chọn “Ghi nhớ đăng nhập”.</p>
+          <div id="sessionList"></div>
+          <button class="btn btn-ghost" style="margin-top:16px" id="logoutAll">Đăng xuất tất cả thiết bị khác</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <div>© 2026 Bếp Cam · Quận Hà Đông, Hà Nội · datban@bepcam.example</div>
+  <div class="credits">Ảnh: Wikimedia Commons — Andy Li (CC0), Weetjesman (CC BY-SA 4.0), pelican from Tokyo (CC BY-SA 2.0), Kent Wang (CC BY-SA 2.0), Kham Tran (CC BY-SA 3.0), Vyacheslav Argenberg (CC BY 4.0), Minh28397 (CC BY-SA 4.0), Clarin (CC BY 2.5), Andy Wright (CC BY 2.0), Jpatokal (CC BY-SA 4.0), Nick Nguyen (CC BY-SA 2.0), Basile Morin (CC BY-SA 4.0), Phương Huy (PD), Food Trails (CC BY-SA 2.0).</div>
+</div></footer>
+</div>
+
+<!-- ===== GỌI MÓN TẠI BÀN (QR) ===== -->
+<div id="tableMode" class="table-mode" hidden>
+  <div class="phone" id="phone">
+    <div class="t-head">
+      <div class="row">
+        <div><b style="font-size:1.1rem">Bàn T01</b><div class="muted" style="font-size:.85rem">Tầng 2 · Sân thượng · 4 khách</div></div>
+        <button class="btn btn-ghost btn-sm" id="tStatusBtn">Món đã gọi <span class="badge b-info" id="tSentCount">0</span></button>
+      </div>
+      <input class="search" style="width:100%;margin-top:10px" type="search" id="tq" placeholder="Tìm món…" aria-label="Tìm món">
+      <div class="t-cats" id="tCats"></div>
+    </div>
+    <div class="closed-note" id="closedNote" hidden>Bàn này chưa được mở. Bạn vẫn xem được thực đơn. Vui lòng gọi nhân viên để bắt đầu gọi món.</div>
+    <div class="t-body" id="tList"></div>
+    <div class="cart-pill" id="cartPill" hidden><button class="btn btn-primary" id="openCart"><span><svg class="i" aria-hidden="true"><use href="#i-shopping-cart"/></svg> <b id="cartQty">0</b> món</span><span id="cartTotal">0đ</span></button></div>
+    <div class="t-bar">
+      <button class="btn btn-ghost" id="tHelp"><svg class="i" aria-hidden="true"><use href="#i-hand"/></svg> Cần hỗ trợ</button>
+      <button class="btn btn-ghost" id="tBill"><svg class="i" aria-hidden="true"><use href="#i-receipt"/></svg> Thanh toán</button>
+      <button class="btn btn-primary" id="tChat"><svg class="i" aria-hidden="true"><use href="#i-sparkles"/></svg> Hỏi AI</button>
+    </div>
+
+    <div class="sheet" id="cartSheet" role="dialog" aria-modal="true" aria-label="Giỏ món">
+      <div class="sheet-in">
+        <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Giỏ món</h3><button class="icon-btn" data-close="cartSheet" aria-label="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+        <div id="cartLines"></div>
+        <div class="sum-row" style="margin-top:8px"><b>Tạm tính</b><b id="cartTotal2" class="price"></b></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px" id="sendKitchen">Gửi bếp</button>
+      </div>
+    </div>
+    <div class="sheet" id="helpSheet" role="dialog" aria-modal="true" aria-label="Cần hỗ trợ"><div class="sheet-in"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Cần hỗ trợ</h3><button class="icon-btn" data-close="helpSheet" aria-label="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div><div class="help-grid" id="helpGrid"></div><h3 style="margin:18px 0 0">Yêu cầu của bạn</h3><div id="helpLines"></div></div></div>
+    <div class="sheet" id="statusSheet" role="dialog" aria-modal="true" aria-label="Món đã gọi">
+      <div class="sheet-in">
+        <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Món đã gọi</h3><button class="icon-btn" data-close="statusSheet" aria-label="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+        <p class="muted" style="font-size:.85rem;margin:6px 0 0">Cập nhật trực tiếp từ bếp.</p>
+        <div id="statusLines"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHAT ===== -->
+<button class="chat-fab" id="chatFab" aria-label="Mở trợ lý AI" aria-expanded="false">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12Z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke-linecap="round" stroke-width="3"/></svg>
+</button>
+<div class="chat" id="chat" role="dialog" aria-label="Trợ lý AI">
+  <div class="chat-head"><span class="dot">AI</span><div><b>Trợ lý Bếp Cam</b><div class="muted" style="font-size:.8rem">Gợi ý theo khẩu vị của bạn</div></div>
+    <button class="icon-btn" style="margin-left:auto" id="chatClose" aria-label="Đóng trợ lý"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <div class="chat-log" id="chatLog" aria-live="polite"></div>
+  <div class="quick" id="quick">
+    <button>Gợi ý món cho 4 người, không cay</button><button>Món chay có gì?</button><button>Đồ uống giải nhiệt</button><button>Món đặc sắc nhất?</button>
+  </div>
+  <form class="chat-in" id="chatForm"><label class="sr" for="chatInput">Câu hỏi</label><input id="chatInput" placeholder="Hỏi về món ăn, đặt bàn…" autocomplete="off"><button class="btn btn-primary" style="padding:0 16px" aria-label="Gửi">Gửi</button></form>
+</div>
+
+<dialog id="itemDlg"></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const fmt = n => n.toLocaleString('vi-VN') + 'đ';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const ITEMS = [
+  {id:1,name:'Phở bò tái',cat:'Món chính',price:65000,img:'pho',tags:['Bò','Nước dùng'],allergens:[],rating:4.8,sold:320,desc:'Nước dùng ninh xương 12 tiếng, bò tái chần, bánh phở tươi.'},
+  {id:2,name:'Bún chả Hà Nội',cat:'Món chính',price:60000,img:'buncha',tags:['Nướng','Thịt heo'],allergens:[],rating:4.7,sold:290,desc:'Chả viên và chả miếng nướng than hoa, nước chấm chua ngọt.'},
+  {id:3,name:'Gỏi cuốn tôm thịt',cat:'Khai vị',price:45000,img:'goicuon',tags:['Tươi mát','Hải sản'],allergens:['Tôm','Đậu phộng'],rating:4.6,sold:210,desc:'Bánh tráng cuốn tôm, thịt, bún và rau thơm, chấm tương đậu phộng.'},
+  {id:4,name:'Bánh xèo miền Tây',cat:'Khai vị',price:55000,img:'banhxeo',tags:['Chiên','Hải sản'],allergens:['Tôm'],rating:4.5,sold:150,desc:'Vỏ giòn nghệ, nhân tôm thịt giá, ăn kèm rau rừng.'},
+  {id:5,name:'Cơm tấm sườn bì',cat:'Món chính',price:60000,img:'comtam',tags:['Nướng','Thịt heo'],allergens:['Trứng'],rating:4.6,sold:240,desc:'Sườn nướng mật ong, bì, chả trứng, mỡ hành.'},
+  {id:6,name:'Chả giò rế',cat:'Khai vị',price:50000,img:'chagio',tags:['Chiên','Hải sản'],allergens:['Tôm'],rating:4.4,sold:170,desc:'Chả giò vỏ rế giòn, nhân tôm thịt, ăn kèm xà lách.'},
+  {id:7,name:'Bún bò Huế',cat:'Món chính',price:70000,img:'bunbohue',tags:['Cay','Bò'],allergens:[],rating:4.7,sold:260,desc:'Nước dùng sả ớt đậm vị Huế, bắp bò, giò heo, chả cua.'},
+  {id:8,name:'Mì Quảng gà',cat:'Món chính',price:65000,img:'miquang',tags:['Gà','Hơi cay'],allergens:['Đậu phộng'],rating:4.5,sold:130,desc:'Sợi mì vàng, gà ta, bánh đa nướng, rắc đậu phộng.'},
+  {id:9,name:'Bò lúc lắc',cat:'Món chính',price:145000,img:'boluclac',tags:['Bò','Xào'],allergens:[],rating:4.8,sold:180,desc:'Thăn bò Úc xào lửa lớn, ớt chuông, hành tây, salad.'},
+  {id:10,name:'Rau muống xào tỏi',cat:'Rau',price:45000,img:'raumuong',tags:['Chay','Xào'],allergens:[],rating:4.3,sold:200,desc:'Rau muống ngọn xào tỏi giòn, có thể làm chay hoàn toàn.'},
+  {id:11,name:'Cà phê sữa đá',cat:'Đồ uống',price:35000,img:'caphe',tags:['Cà phê'],allergens:['Sữa'],rating:4.9,sold:410,desc:'Robusta pha phin, sữa đặc.'},
+  {id:12,name:'Sâm dứa sữa',cat:'Đồ uống',price:35000,img:'tra',tags:['Giải nhiệt'],allergens:['Sữa'],rating:4.5,sold:190,desc:'Nước sâm thơm lá dứa, thêm sữa béo nhẹ.'},
+  {id:13,name:'Nước mía',cat:'Đồ uống',price:25000,img:'nuocmia',tags:['Giải nhiệt','Chay'],allergens:[],rating:4.4,sold:220,desc:'Mía ép tươi, thêm tắc.'},
+];
+const SOLD_OUT = new Set([4]);
+const prefs = {'Bò':'LIKE','Nướng':'LIKE','Cay':'DISLIKE','Đậu phộng':'ALLERGY'};
+const PREF_TAGS = ['Bò','Gà','Thịt heo','Hải sản','Tôm','Chay','Nướng','Chiên','Xào','Nước dùng','Cay','Ngọt','Đậu phộng','Sữa','Trứng','Gluten'];
+const allergic = it => it.allergens.some(a => prefs[a]==='ALLERGY') || it.tags.some(t=>prefs[t]==='ALLERGY');
+const img = (k,alt) => `<img src="img/${k}.jpg" alt="${alt}" loading="lazy">`;
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-toast]');if(b)toast(b.dataset.toast)});
+
+function card(it,why){
+  const out = SOLD_OUT.has(it.id), al = allergic(it);
+  return `<article class="card link ${out?'dim':''}" data-item="${it.id}" tabindex="0" aria-label="${it.name}">
+    <div class="ph">${img(it.img,it.name)}</div>
+    <div class="body">
+      <div class="row"><h3 style="margin:0">${it.name}</h3><span class="price">${fmt(it.price)}</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${it.tags.map(t=>`<span class="tag">${t}</span>`).join('')}${out?'<span class="badge b-warn">Hết hôm nay</span>':''}</div>
+      ${why?`<div class="why"><svg class="i" aria-hidden="true"><use href="#i-lightbulb"/></svg> ${why}</div>`:''}
+      ${al?'<div class="warn-line"><svg class="i" aria-hidden="true"><use href="#i-triangle-alert"/></svg> Có thành phần bạn dị ứng</div>':''}
+      <div class="row muted" style="font-size:.85rem;margin-top:auto"><span><span class="stars">★</span> ${it.rating.toLocaleString('vi-VN')}</span><span>${it.sold} lượt gọi</span></div>
+    </div></article>`;
+}
+const byId = id => ITEMS.find(i=>i.id===id);
+
+/* Home */
+$('#recGrid').innerHTML = [[9,'Bạn thích món bò, đã gọi 3 lần'],[2,'Món nướng, khách có khẩu vị giống bạn hay gọi'],[1,'Không cay, hợp bữa trưa'],[12,'Hay được gọi kèm bò lúc lắc']].map(([i,w])=>card(byId(i),w)).join('');
+$('#bestGrid').innerHTML = [...ITEMS].sort((a,b)=>b.sold-a.sold).slice(0,4).map(i=>card(i)).join('');
+
+/* Menu */
+const CATS=['Tất cả','Khai vị','Món chính','Rau','Đồ uống']; let curCat='Tất cả';
+$('#cats').innerHTML = CATS.map(c=>`<button class="chip" aria-pressed="${c===curCat}">${c}</button>`).join('');
+$('#cats').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;curCat=b.textContent;$$('#cats .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));renderMenu()});
+$('#q').addEventListener('input',renderMenu);$('#hideAllergy').addEventListener('change',renderMenu);
+function renderMenu(){
+  const q=$('#q').value.trim().toLowerCase(), hide=$('#hideAllergy').checked;
+  const list=ITEMS.filter(i=>(curCat==='Tất cả'||i.cat===curCat)&&(!q||(i.name+i.tags.join(' ')).toLowerCase().includes(q))&&!(hide&&allergic(i)));
+  $('#menuGrid').innerHTML=list.length?list.map(i=>card(i)).join(''):'<p class="muted">Không có món phù hợp.</p>';
+}
+renderMenu();
+
+/* Item modal */
+document.addEventListener('click',e=>{const c=e.target.closest('[data-item]');if(c&&!e.target.closest('button'))openItem(+c.dataset.item)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-item]'))openItem(+e.target.dataset.item)});
+function openItem(id){
+  const it=byId(id),d=$('#itemDlg');
+  d.innerHTML=`<div class="modal-ph">${img(it.img,it.name)}</div><div class="modal-body">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:start"><div><h2 style="margin:0">${it.name}</h2><span class="price" style="font-size:1.2rem">${fmt(it.price)}</span></div><button class="icon-btn" onclick="this.closest('dialog').close()" aria-label="Đóng"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <p>${it.desc}</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">${it.tags.map(t=>`<span class="tag">${t}</span>`).join('')}${it.allergens.map(a=>`<span class="badge ${prefs[a]==='ALLERGY'?'b-bad':'b-warn'}">Có ${a.toLowerCase()}</span>`).join('')}</div>
+    <h3 style="margin-top:20px">Đánh giá (<span class="stars">★</span> ${it.rating.toLocaleString('vi-VN')})</h3>
+    <div class="review"><b>Hoàng Nam</b> <span class="stars">★★★★★</span><p style="margin:4px 0 0">Nước dùng đậm, phần ăn vừa, lên món nhanh.</p></div>
+    <div class="review"><b>Thu Trang</b> <span class="stars">★★★★☆</span><p style="margin:4px 0 0">Ngon, nhưng giờ cao điểm hơi đông.</p></div>
+    <p class="muted" style="font-size:.85rem">Chỉ khách đã gọi món này mới viết được đánh giá.</p></div>`;
+  d.showModal();
+}
+$('#itemDlg').addEventListener('click',e=>{if(e.target.id==='itemDlg')e.target.close()});
+
+/* Booking */
+const SLOTS=['11:00','11:30','12:00','12:30','13:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30'],FULL=new Set(['19:00','19:30']);
+let slot='18:30',guests=4,area='Sảnh trong nhà';
+const today=new Date();$('#bDate').valueAsDate=today;$('#bDate').min=today.toISOString().slice(0,10);
+$('#slots').innerHTML=SLOTS.map(s=>`<button type="button" class="slot" aria-pressed="${s===slot}" ${FULL.has(s)?'disabled aria-label="'+s+' đã kín"':''}>${s}</button>`).join('');
+$('#slots').addEventListener('click',e=>{const b=e.target.closest('.slot');if(!b||b.disabled)return;slot=b.textContent;$$('#slots .slot').forEach(x=>x.setAttribute('aria-pressed',x===b));sync()});
+$('#gMinus').onclick=()=>{guests=Math.max(1,guests-1);sync()};$('#gPlus').onclick=()=>{guests=Math.min(30,guests+1);sync()};
+$$('.area').forEach(a=>a.onclick=()=>{area=a.dataset.area;$$('.area').forEach(x=>x.setAttribute('aria-pressed',x===a));sync()});
+$('#bDate').onchange=sync;
+function sync(){$('#gCount').textContent=guests;$('#sGuests').textContent=guests;$('#sTime').textContent=slot;$('#sArea').textContent=area;$('#sDate').textContent=new Date($('#bDate').value).toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit'})}
+sync();
+const bookings=[{d:'15/11',t:'19:30',g:6,a:'Phòng VIP 1',s:['Đã xác nhận','b-ok']},{d:'02/11',t:'12:00',g:2,a:'Sảnh trong nhà',s:['Hoàn thành','b-info']}];
+function renderBookings(){$('#myBookings').innerHTML=bookings.map((b,i)=>`<div class="session"><div><b>${b.d} · ${b.t}</b><div class="muted" style="font-size:.85rem">${b.g} khách · ${b.a}</div></div><div style="display:flex;gap:8px;align-items:center"><span class="badge ${b.s[1]}">${b.s[0]}</span>${b.s[0]!=='Hoàn thành'?`<button class="btn btn-ghost btn-sm" data-cancel="${i}">Hủy</button>`:''}</div></div>`).join('')}
+renderBookings();
+$('#myBookings').addEventListener('click',e=>{const b=e.target.closest('[data-cancel]');if(b){bookings[b.dataset.cancel].s=['Đã hủy','b-bad'];renderBookings();toast('Đã hủy lượt đặt bàn')}});
+$('#bookForm').onsubmit=e=>{e.preventDefault();bookings.unshift({d:new Date($('#bDate').value).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}),t:slot,g:guests,a:area,s:['Chờ xác nhận','b-warn']});renderBookings();toast('Đã gửi yêu cầu. Nhà hàng sẽ xác nhận trong 10 phút.')};
+
+/* Account */
+$$('.side button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function showTab(t){$$('.side button').forEach(x=>x.setAttribute('aria-selected',x.dataset.tab===t));$$('[data-tabp]').forEach(p=>p.hidden=p.dataset.tabp!==t)}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-acct]');if(a)setTimeout(()=>showTab(a.dataset.acct))});
+const CYCLE=[undefined,'LIKE','DISLIKE','ALLERGY'];
+function renderPrefs(){$('#prefGrid').innerHTML=PREF_TAGS.map(t=>`<button class="pref" data-tagp="${t}" data-state="${prefs[t]||''}" aria-label="${t}: ${({LIKE:'thích',DISLIKE:'không thích',ALLERGY:'dị ứng'})[prefs[t]]||'không chọn'}">${t}</button>`).join('')}
+renderPrefs();
+$('#prefGrid').addEventListener('click',e=>{const b=e.target.closest('.pref');if(!b)return;const t=b.dataset.tagp;const n=CYCLE[(CYCLE.indexOf(prefs[t])+1)%4];if(n)prefs[t]=n;else delete prefs[t];renderPrefs();renderMenu()});
+$('#orderRows').innerHTML=[['02/11','A05','Bò lúc lắc, Phở bò tái, Sâm dứa sữa ×2',280000,true],['24/10','B02','Bún chả Hà Nội ×2, Nước mía ×2',170000,false],['11/10','A01','Cơm tấm sườn bì, Cà phê sữa đá',95000,false]]
+  .map(([d,t,m,s,r])=>`<tr><td>${d}</td><td>${t}</td><td>${m}</td><td><b>${fmt(s)}</b></td><td>${r?'<button class="btn btn-primary btn-sm" data-toast="Mở form đánh giá từng món">Đánh giá</button>':'<span class="badge b-ok">Đã đánh giá</span>'}</td></tr>`).join('');
+const sessions=[['Chrome · Windows','Hà Nội · đang dùng',true],['Safari · iPhone','Hà Nội · 2 giờ trước',false],['Chrome · Android','Hải Phòng · 3 ngày trước',false]];
+function renderSessions(){$('#sessionList').innerHTML=sessions.map((s,i)=>`<div class="session"><div><b>${s[0]}</b><div class="muted" style="font-size:.85rem">${s[1]}</div></div>${s[2]?'<span class="badge b-ok">Thiết bị này</span>':`<button class="btn btn-ghost btn-sm" data-kill="${i}">Đăng xuất</button>`}</div>`).join('')}
+renderSessions();
+$('#sessionList').addEventListener('click',e=>{const b=e.target.closest('[data-kill]');if(b){sessions.splice(+b.dataset.kill,1);renderSessions();toast('Đã thu hồi phiên đăng nhập của thiết bị đó')}});
+$('#logoutAll').onclick=()=>{sessions.splice(1);renderSessions();toast('Đã đăng xuất mọi thiết bị khác')};
+
+/* Table mode */
+const cart=new Map(); const sent=[]; let tCat='Tất cả';
+$('#tCats').innerHTML=CATS.map(c=>`<button class="chip" aria-pressed="${c===tCat}">${c}</button>`).join('');
+$('#tCats').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;tCat=b.textContent;$$('#tCats .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));renderT()});
+$('#tq').addEventListener('input',renderT);
+let tableOpen=true;
+function renderT(){
+  const q=$('#tq').value.trim().toLowerCase();
+  $('#tList').innerHTML=ITEMS.filter(i=>(tCat==='Tất cả'||i.cat===tCat)&&(!q||i.name.toLowerCase().includes(q))).map(i=>{const out=SOLD_OUT.has(i.id);return `<div class="t-item ${out?'dim':''}" style="${out?'opacity:.5':''}">${img(i.img,i.name)}<div><h3>${i.name}</h3><div class="muted" style="font-size:.82rem">${i.tags.join(' · ')}</div><span class="price">${fmt(i.price)}</span></div>${out?'<span class="badge b-warn">Hết</span>':tableOpen?`<button class="add" data-add="${i.id}" aria-label="Thêm ${i.name}">+</button>`:''}</div>`}).join('');
+}
+function addToCart(id,src='MENU'){const c=cart.get(id)||{qty:0,note:'',src};c.qty++;cart.set(id,c);renderCart();toast(`Đã thêm ${byId(id).name}`)}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-add]');if(a)addToCart(+a.dataset.add,a.dataset.src||'MENU')});
+function renderCart(){
+  let q=0,t=0;cart.forEach((c,id)=>{q+=c.qty;t+=c.qty*byId(id).price});
+  $('#cartPill').hidden=!q;$('#cartQty').textContent=q;$('#cartTotal').textContent=fmt(t);$('#cartTotal2').textContent=fmt(t);
+  $('#cartLines').innerHTML=[...cart].map(([id,c])=>`<div class="c-line"><div><b>${byId(id).name}</b>${c.src==='CHATBOT'?' <span class="tag tag-ai">Gợi ý AI</span>':''}<div class="price" style="font-size:.9rem">${fmt(byId(id).price*c.qty)}</div></div>
+    <div class="qty"><button data-dec="${id}" aria-label="Bớt">−</button><b>${c.qty}</b><button data-inc="${id}" aria-label="Thêm">+</button></div>
+    <input class="c-note" data-note="${id}" placeholder="Ghi chú: ít hành, không đá…" value="${c.note}"></div>`).join('');
+}
+$('#cartLines').addEventListener('click',e=>{const d=e.target.closest('[data-dec]'),i=e.target.closest('[data-inc]');if(d){const id=+d.dataset.dec,c=cart.get(id);if(--c.qty<=0)cart.delete(id);renderCart()}if(i){cart.get(+i.dataset.inc).qty++;renderCart()}});
+$('#cartLines').addEventListener('input',e=>{if(e.target.dataset.note)cart.get(+e.target.dataset.note).note=e.target.value});
+$('#openCart').onclick=()=>$('#cartSheet').classList.add('open');
+$('#tStatusBtn').onclick=()=>{renderStatus();$('#statusSheet').classList.add('open')};
+$$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close).classList.remove('open'));
+$$('.sheet').forEach(s=>s.addEventListener('click',e=>{if(e.target===s)s.classList.remove('open')}));
+const HELP={CALL_STAFF:['hand','Gọi nhân viên'],REQUEST_BILL:['receipt','Tính tiền'],EXTRA_WATER:['glass-water','Thêm nước, đá'],EXTRA_UTENSIL:['utensils','Thêm bát đũa']};
+const helpReqs=[];
+const ico=n=>`<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+$('#helpGrid').innerHTML=Object.entries(HELP).map(([k,[i,l]])=>`<button data-help="${k}">${ico(i)}${l}</button>`).join('');
+function renderHelp(){$('#helpLines').innerHTML=helpReqs.length?helpReqs.map(r=>`<div class="status-line"><b>${ico(HELP[r.type][0])} ${HELP[r.type][1]}</b><span class="badge ${['b-warn','b-info','b-ok'][r.st]}">${['Đã gửi, chờ nhân viên','Nhân viên đã nhận','Đã xong'][r.st]}</span></div>`).join(''):'<p class="muted">Chưa có yêu cầu nào.</p>'}
+function sendHelp(type){
+  if(helpReqs.some(r=>r.type===type&&r.st<2)){toast('Bạn đã gửi yêu cầu này rồi, nhân viên sẽ đến ngay');return}
+  const r={type,st:0};helpReqs.unshift(r);renderHelp();toast('Đã gửi yêu cầu cho nhân viên');
+  // Mô phỏng: nhân viên nhận (service_requests.status = ACKNOWLEDGED) rồi xử lý xong, đẩy qua WebSocket
+  setTimeout(()=>{r.st=1;renderHelp()},3500);setTimeout(()=>{r.st=2;renderHelp()},9000);
+}
+$('#helpGrid').onclick=e=>{const b=e.target.closest('[data-help]');if(b)sendHelp(b.dataset.help)};
+$('#tHelp').onclick=()=>{renderHelp();$('#helpSheet').classList.add('open')};
+$('#tBill').onclick=()=>{sendHelp('REQUEST_BILL');renderHelp();$('#helpSheet').classList.add('open')};
+const ST=[['Chờ bếp','b-warn'],['Đang nấu','b-info'],['Xong, đang mang ra','b-ok'],['Đã phục vụ','b-ok']];
+$('#sendKitchen').onclick=()=>{
+  cart.forEach((c,id)=>sent.push({id,qty:c.qty,src:c.src,st:0}));cart.clear();renderCart();$('#cartSheet').classList.remove('open');
+  $('#tSentCount').textContent=sent.length;toast('Đã gửi bếp. Theo dõi ở "Món đã gọi".');
+  // Mô phỏng sự kiện WebSocket /topic/orders/{orderId}
+  sent.forEach(s=>{if(s.timer)return;s.timer=setInterval(()=>{if(s.st<3){s.st++;renderStatus()}else clearInterval(s.timer)},3000+Math.random()*3000)});
+};
+function renderStatus(){$('#statusLines').innerHTML=sent.length?sent.map(s=>`<div class="status-line"><div style="flex:1"><b>${s.qty}× ${byId(s.id).name}</b>${s.src==='CHATBOT'?' <span class="tag tag-ai">AI</span>':''}<div class="steps">${[0,1,2,3].map(k=>`<i class="${k<=s.st?'on':''}"></i>`).join('')}</div></div><span class="badge ${ST[s.st][1]}">${ST[s.st][0]}</span></div>`).join(''):'<p class="muted">Chưa gọi món nào.</p>'}
+
+/* Chat (mô phỏng: trong hệ thống thật gọi BE → AI service GNN+GCL+RAG) */
+const log=$('#chatLog');
+function inTable(){return location.hash==='#table'}
+function bot(text,ids){
+  const recs=ids?`<div class="recs">${ids.map(id=>{const i=byId(id);return `<div class="rec">${img(i.img,i.name)}<div><b>${i.name}</b><small>${fmt(i.price)} · ★ ${i.rating.toLocaleString('vi-VN')}</small></div>${inTable()&&tableOpen?`<button class="btn btn-primary btn-sm" data-add="${id}" data-src="CHATBOT">Thêm</button>`:`<button class="btn btn-ghost btn-sm" data-item="${id}">Xem</button>`}</div>`}).join('')}</div><div class="fb"><button aria-pressed="false" aria-label="Hữu ích"><svg class="i" aria-hidden="true"><use href="#i-thumbs-up"/></svg></button><button aria-pressed="false" aria-label="Không hữu ích"><svg class="i" aria-hidden="true"><use href="#i-thumbs-down"/></svg></button></div>`:'';
+  log.insertAdjacentHTML('beforeend',`<div class="msg bot">${text}${recs}</div>`);log.scrollTop=log.scrollHeight;
+}
+log.addEventListener('click',e=>{const b=e.target.closest('.fb button');if(b){b.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));toast('Cảm ơn bạn, phản hồi giúp AI gợi ý tốt hơn')}});
+function answer(q){
+  q=q.toLowerCase();const ok=i=>!allergic(i)&&!SOLD_OUT.has(i.id);
+  if(q.includes('chay'))return ['Các món chay hoặc làm chay được:',ITEMS.filter(i=>i.tags.includes('Chay')&&ok(i)).map(i=>i.id)];
+  if(q.includes('uống')||q.includes('giải nhiệt'))return ['Đồ uống mát hợp với bữa của bạn:',[13,12,11].filter(id=>ok(byId(id)))];
+  if(q.includes('người')||q.includes('không cay'))return ['Cho 4 người, không cay, đã loại món có đậu phộng (bạn dị ứng): 1 khai vị, 2 món chính, 1 rau. Khoảng 320.000đ.',[6,9,2,10]];
+  if(q.includes('đặt bàn'))return ['Bạn có thể đặt bàn ở mục <b>Đặt bàn</b>. Tối nay còn trống khung 18:30 và 20:00.',null];
+  return ['Món được khen nhiều nhất và hợp khẩu vị của bạn (thích bò, món nướng):',[9,1,2]];
+}
+function ask(q){
+  if(!q.trim())return;log.insertAdjacentHTML('beforeend',`<div class="msg user"></div>`);log.lastElementChild.textContent=q;
+  log.insertAdjacentHTML('beforeend','<div class="msg bot" id="typing"><span class="typing"><i></i><i></i><i></i></span></div>');log.scrollTop=log.scrollHeight;
+  setTimeout(()=>{$('#typing').remove();const [t,ids]=answer(q);bot(t,ids)},900);
+}
+$('#chatForm').onsubmit=e=>{e.preventDefault();ask($('#chatInput').value);$('#chatInput').value=''};
+$('#quick').addEventListener('click',e=>{if(e.target.tagName==='BUTTON')ask(e.target.textContent)});
+function toggleChat(o){$('#chat').classList.toggle('open',o);$('#chatFab').setAttribute('aria-expanded',o);if(o){if(!log.children.length)bot(`Chào Minh Anh. Mình là trợ lý Bếp Cam. Mình nhớ bạn thích món bò, không ăn cay và dị ứng đậu phộng. Hôm nay bạn muốn ăn gì?`);$('#chatInput').focus()}}
+$('#chatFab').onclick=$('#tChat').onclick=()=>toggleChat(!$('#chat').classList.contains('open'));$('#chatClose').onclick=()=>toggleChat(false);
+
+/* Mobile nav */
+$('#menuToggle').onclick=()=>{const o=$('#nav').classList.toggle('open');$('#menuToggle').setAttribute('aria-expanded',o)};
+
+/* Router */
+function route(){
+  const h=location.hash.slice(1)||'home', table=h.startsWith('table');
+  $('#web').hidden=table;$('#tableMode').hidden=!table;document.body.classList.toggle('in-table',table);
+  tableOpen=h!=='table-closed';$('#closedNote').hidden=tableOpen;$('#cartPill').hidden=true;renderT();renderCart();
+  if(!table){$$('[data-view]').forEach(v=>v.hidden=v.dataset.view!==h);$$('#nav a').forEach(a=>a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+h));if(a=$('#nav a[aria-current]'))a.setAttribute('aria-current','page');$('#nav').classList.remove('open');window.scrollTo(0,0)}
+}
+var a;window.addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
